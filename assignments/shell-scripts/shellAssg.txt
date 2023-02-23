@@ -1,0 +1,20 @@
+#!/bin/sh
+echo "creating directory Assignments"
+mkdir assignments
+cd assignments
+touch cities.txt
+echo "Enter 5 cities names"
+a=0
+while [ $a -lt 10 ]
+do
+        read city
+        echo $city >> cities.txt
+        a=`expr $a + 1`
+done
+echo "Display the cities names"
+cat cities.txt
+echo "find the city names with new"
+cat cities.txt | grep -i new
+echo "replace "city" with "new" save it in oldcities.txt"
+cat cities.txt | grep -i new | sed 's/new/old/i' > oldcities.txt
+cat oldcities.txt
