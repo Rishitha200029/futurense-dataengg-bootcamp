@@ -1,0 +1,123 @@
+
+# 1.	Load data from Bankmarketdata.csv
+--------------------------------------------
+
+df = spark.read.format("csv").load("C:/Users/miles.MILE-BL-4409-LA/futurense_hadoop-pyspark/labs/dataset/bankmarket/bankmarketdata.csv", sep = ";", escape = "," )
+df.show()
+total=df.count()
+total
+45211
+
+
+
+# 2.Give marketing success rate
+----------------------------------
+ 
+
+# 3.Give marketing failure rate
+--------------------------------------
+
+
+
+# 4.	Maximum, Mean, and Minimum age of the average targeted customer
+---------------------------------------------
+df.select(max("age")).show()
+
++--------+
+|max(age)|
++--------+
+|      95|
++--------+
+
+df.select(mean("age")).show()
+
++-----------------+
+|         avg(age)|
++-----------------+
+|40.93621021432837|
++-----------------+
+
+df.select(min("age")).show()
++--------+
+|min(age)|
++--------+
+|      18|
++--------+
+
+# 5.	Check the quality of customers by checking the average balance, median balance of customers
+-------------------------------------------------
+df.select(mean("balance")).show()
+df.approxQuantile('balance', [0.5], 0).show()
+
+
+# 6.	Check if age matters in marketing subscription for deposit
+df.groupBy('age').count().sort("age").show()
++---+-----+
+|age|count|
++---+-----+
+| 18|   12|
+| 19|   35|
+| 20|   50|
+| 21|   79|
+| 22|  129|
+| 23|  202|
+| 24|  302|
+| 25|  527|
+| 26|  805|
+| 27|  909|
+| 28| 1038|
+| 29| 1185|
+| 30| 1757|
+| 31| 1996|
+| 32| 2085|
+| 33| 1972|
+| 34| 1930|
+| 35| 1894|
+| 36| 1806|
+| 37| 1696|
++---+-----+
+only showing top 20 rows
+
+# 7.	Check if marital status mattered for subscription to deposit.
+df.groupBy('marital').count().show()
++--------+-----+
+| marital|count|
++--------+-----+
+|divorced| 5207|
+| married|27214|
+|  single|12790|
++--------+-----+
+
+# 8.	Check if age and marital status together mattered for subscription to deposit scheme
+df.groupBy("age",'marital').count().sort('age').show()
++---+--------+-----+
+|age| marital|count|
++---+--------+-----+
+| 18|  single|   12|
+| 19|  single|   35|
+| 20|  single|   47|
+| 20| married|    3|
+| 21|  single|   74|
+| 21| married|    5|
+| 22| married|    9|
+| 22|  single|  120|
+| 23|  single|  175|
+| 23| married|   27|
+| 24|divorced|    1|
+| 24|  single|  248|
+| 24| married|   53|
+| 25|divorced|    6|
+| 25| married|   98|
+| 25|  single|  423|
+| 26| married|  170|
+| 26|divorced|   20|
+| 26|  single|  615|
+| 27| married|  233|
++---+--------+-----+
+only showing top 20 rows
+
+ 
+ 
+ 
+ 
+ 
