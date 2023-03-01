@@ -1,0 +1,59 @@
+from pyspark.sql.functions import *
+
+rdd=sc.textFile("C:/Users/miles.MILE-BL-4115-LA/Downloads/modify1_weather.txt")
+rdd1=rdd.map(lambda x:x.split(","))
+df=spark.createDataFrame(rdd1)
+df=df.withColumn("_6",col("_6").cast("float"))
+df=df.withColumn("_7",col("_7").cast("float"))
+
+
+#Displaying Maximum Temperature
+------------------------------
+df.select(max("_6")).show()
++-------+
+|max(_6)|
++-------+
+|   36.0|
++-------+
+
+#Displaying minimum Temperature
+----------------------------------
+df.select(min("_7")).show()
++-------+
+|min(_7)|
++-------+
+|   -7.9|
++-------+
+
+#Displaying monthWise maximum Temperature
+-----------------------------------
+df.groupBy(month("_2")).max("_6").show()
++---------+-------+
+|month(_2)|max(_6)|
++---------+-------+
+|     null|   13.7|
+|        1|   26.5|
+|        6|   33.6|
+|        3|   29.1|
+|        5|   31.1|
+|        4|   30.8|
+|        7|   36.0|
+|        2|   26.6|
++---------+-------+
+
+#Displaying Monthwise Minimum Temperature
+------------------------------------------
+
+df.groupBy(month("_2")).min("_7").show()
++---------+-------+
+|month(_2)|min(_7)|
++---------+-------+
+|     null|    4.4|
+|        1|   -7.9|
+|        6|    0.0|
+|        3|   -3.2|
+|        5|   14.3|
+|        4|    8.0|
+|        7|   19.8|
+|        2|   -3.5|
++---------+-------+
