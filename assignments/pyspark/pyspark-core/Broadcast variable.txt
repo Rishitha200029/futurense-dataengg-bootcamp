@@ -1,0 +1,60 @@
+Broadcast variable
+---------------------
+
+
+countries=sc.broadcast({'AUS':'Australia','IND':'India','JPN':'Japan'})
+trans=sc.parallelize([(100,'Debit',1000.0,'IND'),(101,"Credit",2000.0,'IND'),
+                      (102,'Debit',3000.0,'AUS'),(103,'Credit',4000.0,'JPN'),
+                      (104,'Debit',5000.0,'IND'),(105,'Credit',6000.0,'AUS')])
+
+
+trans.collect()
+
+
+[(100, 'Debit', 1000.0, 'IND'),
+ (101, 'Credit', 2000.0, 'IND'),
+ (102, 'Debit', 3000.0, 'AUS'),
+ (103, 'Credit', 4000.0, 'JPN'),
+ (104, 'Debit', 5000.0, 'IND'),
+ (105, 'Credit', 6000.0, 'AUS')]
+
+
+rdd1=trans.map(lambda x:(x[3],x[1],1))
+rdd1.collect()
+[('IND', 'Debit', 1),
+ ('IND', 'Credit', 1),
+ ('AUS', 'Debit', 1),
+ ('JPN', 'Credit', 1),
+ ('IND', 'Debit', 1),
+ ('AUS', 'Credit', 1)]
+
+
+rdd2=rdd1.groupBy(lambda x:(x[0],x[1])).mapValues(list)
+rdd2.collect()
+[(('IND', 'Debit'), [('IND', 'Debit', 1), ('IND', 'Debit', 1)]),
+ (('IND', 'Credit'), [('IND', 'Credit', 1)]),
+ (('AUS', 'Debit'), [('AUS', 'Debit', 1)]),
+ (('JPN', 'Credit'), [('JPN', 'Credit', 1)]),
+ (('AUS', 'Credit'), [('AUS', 'Credit', 1)])]
+
+
+rdd3=rdd2.map(lambda f:(f[0],len(f[1])))
+rdd3.collect()
+[(('IND', 'Debit'), 2),
+ (('IND', 'Credit'), 1),
+ (('AUS', 'Debit'), 1),
+ (('JPN', 'Credit'), 1),
+ (('AUS', 'Credit'), 1)]
+
+
+def va(code):
+    return countries.value[code]
+
+
+
+rdd3.map(lambda x:(va(x[0][0]),x[0][1],x[1])).collect()
+[('India', 'Debit', 2),
+ ('India', 'Credit', 1),
+ ('Australia', 'Debit', 1),
+ ('Japan', 'Credit', 1),
+ ('Australia', 'Credit', 1)]
