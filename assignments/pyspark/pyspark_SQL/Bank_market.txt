@@ -1,5 +1,5 @@
 
-# 1.	Load data from Bankmarketdata.csv
+# Load data from Bankmarketdata.csv
 --------------------------------------------
 
 df = spark.read.format("csv").load("C:/Users/miles.MILE-BL-4409-LA/futurense_hadoop-pyspark/labs/dataset/bankmarket/bankmarketdata.csv", sep = ";", escape = "," )
@@ -10,12 +10,14 @@ total
 
 
 
-# 2.Give marketing success rate
+# Give marketing success rate
 ----------------------------------
- 
+ (df[df["y"]=="yes"].count()/total).show()
+
 
 # 3.Give marketing failure rate
 --------------------------------------
+(df[df["y"]=="no"].count()/total).show()
 
 
 
@@ -38,11 +40,8 @@ df.select(mean("age")).show()
 +-----------------+
 
 df.select(min("age")).show()
-+--------+
-|min(age)|
-+--------+
-|      18|
-+--------+
+
+
 
 # 5.	Check the quality of customers by checking the average balance, median balance of customers
 -------------------------------------------------
