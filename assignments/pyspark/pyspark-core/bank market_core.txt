@@ -1,0 +1,87 @@
+
+
+
+#1.Load data 
+-----------------------
+rdd=sc.textFile(r"C:\Users\miles.MILE-BL-4115-LA\futurense_hadoop-pyspark\labs\dataset\bankmarket\bankmarketdata.csv")
+rdd.collect()
+ 
+count_total=rdd.count()
+count_total
+45212
+rdd1=rdd.map(lambda x:x.split(","))
+rdd2=rdd1.map(lambda y:y[0].split(";"))
+rdd3=rdd2.filter(lambda z:z[-1]=='"yes"')
+count_yes=rdd3.count()
+count_yes
+5289
+
+#2.Give marketing success rate. (No. of people subscribed / total no. of entries)
+---------------------------------------------------------------------
+success_rate=(count_yes/count_total)*100
+success_rate
+11.698221711050163
+rdd4=rdd2.filter(lambda a:a[-1]=='"no"')
+count_no=rdd4.count()
+count_no
+39922
+
+# 3.Give marketing failure rate
+--------------------------------------
+Failure_rate=(count_no/count_total)*100
+Failure_rate
+88.29956648677341
+heading=rdd2.first()
+rdd5=rdd2.filter(lambda b:b!=heading)
+rdd5.collect()
+
+ 
+ 
+#4.Maximum, Mean, and Minimum age of the average targeted customer
+--------------------------------------------------------------------
+rdd6=rdd5.map(lambda c:int(c[0]))
+rdd6.max()
+95
+rdd6.min()
+18
+rdd6.mean()
+40.936210214327815
+
+#5.Check the quality of customers by checking the average balance,median balance of customers
+-------------------------------------------------------------------
+rdd7=rdd5.map(lambda d:int(d[5])).sortBy(lambda d:d)
+rdd7.collect()
+rdd7.mean()
+1362.2720576850745
+value=int(count_total/2)
+rdd7.collect()[value]
+448
+
+# 6.Check if age matters in marketing subscription for deposit
+-----------------------------------------------------------------
+rdd8=rdd5.map(lambda e:(e[0],1))
+rdd8.groupByKey().mapValues(list)
+rdd8.collect()
+rdd9=rdd8.groupByKey().mapValues(list)
+rdd9.collect()
+rdd10=rdd9.map(lambda g:(g[0],len(g[1])))
+rdd11=rdd10.sortBy(lambda i:i[1],ascending=False)
+rdd11.collect()
+
+
+
+# 7.Check if marital status mattered for subscription to deposit.
+-----------------------------------------------------------------
+rdd12=rdd5.map(lambda j:(j[2],1))
+rdd13=rdd12.groupByKey().mapValues(list)
+rdd14=rdd13.map(lambda k:(k[0],len(k[1])))
+rdd14.collect()
+rdd_marital_status=rdd5.map(lambda j:(j[2],1)).groupByKey().mapValues(list).map(lambda k:(k[0],len(k[1])))
+rdd_marital_status.collect()
+
+
+# 8.Check if age and marital status together mattered  for subscription to deposit scheme
+------------------------------------------------------------
+rdd15=rdd5.map(lambda l:(l[0],l[2],1)).groupBy(lambda m:((m[0],m[1]))).mapValues(list).map(lambda n:(n[0],len(n[1]))).sortBy(lambda o:o[1],ascending=False)
+rdd15.collect()
+
