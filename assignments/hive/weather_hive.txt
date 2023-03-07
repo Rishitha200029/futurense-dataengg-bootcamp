@@ -1,0 +1,31 @@
+
+Weather Table Creation:
+-----------------------
+create external table if not exists weather (wbanno int, lst_date date, crx_vn float, longitude float,latitude float,t_daily_max float,t_daily_min float, t_daily_mean float, t_daily_avg float,p_daily_calc float, solarad_daily string,sur_temp_daily_type float, sur_temp_daily_max float,
+sur_temp_daily_min float,sur_temp_daily_avg float,rh_daily_max float, rh_daily_min float,rh_daily_avg float,soil_moisture_5_daily float,
+soil_moisture_10_daily float, soil_moisture_20_daily  float, soil_moisture_50_daily float, soil_moisture_100_daily float,
+soil_temp_5_daily float, soil_temp_10_daily float, soil_temp_20_daily float, soil_temp_50_daily float, soil_temp_100_daily  float)
+comment 'weather details'
+row format delimited
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile;
+
+Insert data into that table:
+---------------------------
+
+LOAD DATA LOCAL INPATH "/mnt/c/Users/miles.MILE-BL-4115-LA/Downloads/modify1_weather.txt" overwrite into table weather;
+
+
+#1  Find the Minimum and Maximum temperature from the weather table:
+--------------------------------------------------------------------
+select max(t_daily_max),min(t_daily_min) from weather;
+
+
+
+
+#2  Find the minimum and maximum temperature from weather data for every month:
+------------------------------------------------------------------------------
+
+ select month(lst_date),max(t_daily_max),min(t_daily_min) from weather group by month(lst_date);
+
